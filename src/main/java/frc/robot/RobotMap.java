@@ -24,6 +24,13 @@ public class RobotMap {
   public static int kPopperDoubSolen1Forw = 0;
   public static int kPopperDoubSolen1Reverse = 1;
 
+  public static double turnToAnglekP = 1.0;
+  public static double turnToAnglekI = 0.0;
+  public static double turnToAngleKD = 0.1;
+  public static double turnToAngleMinOutput = 0.2;
+  public static double turnToAngleMaxOutput = 0.5;
+  public static double turnToAngleTolerance = 0.5;
+  public static String turnToAnglePIDName = "Turn to Angle PID";
 
   // public static int leftMotor = 1;
   // public static int rightMotor = 2;

@@ -7,9 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoAim;
 import frc.robot.commands.PopPopper;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.utilities.XboxController;
 
 /**
@@ -18,6 +22,12 @@ import frc.robot.utilities.XboxController;
  */
 public class OI {
   public static XboxController mDriverController;
+
+  public TurnToAngle mTurnToAngle;
+  public PIDController mTurnToAngleController;
+  public AutoAim mAutoAim;
+
+  public static boolean mLastDriverTrigger = false;
 
   public OI() {
     mDriverController = new XboxController(RobotMap.kDriverControllerPort);
@@ -30,14 +40,27 @@ public class OI {
     Robot.Drive.setSpeedTurn(mDriverController.getY(Hand.kLeft),
         mDriverController.getX(Hand.kRight));
 
-    mDriverController.ButtonA.whileHeld(new PopPopper());
+    // mDriverController.ButtonA.whileHeld(new PopPopper());
 
 
-    // if (mDriverController.getAButton()) {
-    // Robot.Popper.pop();
-    // } else {
-    // Robot.Popper.retract();
-    // }
+    if (mDriverController.getAButton()) {
+      Robot.Popper.pop();
+    } else {
+      Robot.Popper.retract();
+    }
+
+    if (mDriverController.getLeftTrigger()) {
+      new AutoAim().start();
+    }
+
+    if (mDriverController.getRightTrigger() && !mLastDriverTrigger) {
+      new TurnToAngle(SmartDashboard.getNumber("turn_to_angle_setpoint", Robot.Drive.getYaw()))
+          .start();
+    } else if (mLastDriverTrigger) {
+      Robot.Drive.getCurrentCommand().cancel();
+    }
+
+    mLastDriverTrigger = mDriverController.getRightTrigger();
   }
 
 
