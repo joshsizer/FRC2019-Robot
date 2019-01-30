@@ -16,6 +16,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Popper;
+import frc.robot.subsystems.Arm;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,6 +27,7 @@ import frc.robot.subsystems.Popper;
 public class Robot extends TimedRobot {
   public static Drive Drive;
   public static Popper Popper;
+  public static Arm Arm;
   public static OI mOI;
 
   Command m_autonomousCommand;
@@ -39,6 +41,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     Drive = new Drive();
     Popper = new Popper();
+    Arm = new Arm();
     mOI = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
@@ -55,6 +58,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("heading", Drive.getYaw());
   }
 
   /**
@@ -63,6 +67,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+
   }
 
   @Override

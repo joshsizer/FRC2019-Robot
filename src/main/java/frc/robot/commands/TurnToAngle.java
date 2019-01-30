@@ -27,6 +27,11 @@ public class TurnToAngle extends PIDCommand {
   }
 
   @Override
+  protected void setInputRange(double minimumInput, double maximumInput) {
+    super.setInputRange(minimumInput, maximumInput);
+  }
+
+  @Override
   protected void initialize() {
     super.initialize();
 

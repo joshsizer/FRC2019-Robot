@@ -15,14 +15,20 @@ package frc.robot;
 public class RobotMap {
   public static int kDriverControllerPort = 0;
   public static int kOperatorControllerPort = 1;
+  public static double kDriverDeadband = 0.1;
 
-  public static int kRightMotor1 = 0;
-  public static int kRightMotor2 = 3;
-  public static int kLeftMotor1 = 1;
-  public static int kLeftMotor2 = 2;
+  public static int kRightMotor1 = 2;
+  public static int kRightMotor2 = 1;
+  public static int kLeftMotor1 = 0;
+  public static int kLeftMotor2 = 3;
 
-  public static int kPopperDoubSolen1Forw = 0;
-  public static int kPopperDoubSolen1Reverse = 1;
+  public static int kPopperDoubSolen1Forw = 4;
+  public static int kPopperDoubSolen1Reverse = 5;
+  public static int kPopperDoubSolen2Forw = 2;
+  public static int kPopperDoubSolen2Reverse = 3;
+
+  public static int kArmDoubleSolen1Forw = 1;
+  public static int kArmDoubleSolen1Reverse = 0;
 
   public static double turnToAnglekP = 1.0;
   public static double turnToAnglekI = 0.0;

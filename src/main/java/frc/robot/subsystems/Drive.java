@@ -28,8 +28,8 @@ public class Drive extends Subsystem {
     mRightDriveMotor1 = new Spark(RobotMap.kRightMotor1);
     mRightDriveMotor2 = new Spark(RobotMap.kRightMotor2);
 
-    mRightDriveMotor1.setInverted(true);
-    mRightDriveMotor2.setInverted(true);
+    mLeftDriveMotor1.setInverted(true);
+    mLeftDriveMotor2.setInverted(true);
 
     // SpeedControllerGroup leftContGroup =
     // new SpeedControllerGroup(mLeftDriveMotor1, mLeftDriveMotor2);
@@ -50,6 +50,11 @@ public class Drive extends Subsystem {
     setRight(speed + turn);
   }
 
+  public void setSpeedLeftRight(double left, double right) {
+    setLeft(left);
+    setRight(right);
+  }
+
   private void setLeft(double speed) {
     mLeftDriveMotor1.set(speed);
     mLeftDriveMotor2.set(speed);
@@ -58,6 +63,10 @@ public class Drive extends Subsystem {
   private void setRight(double speed) {
     mRightDriveMotor1.set(speed);
     mRightDriveMotor2.set(speed);
+  }
+
+  public void set(double speed) {
+    mLeftDriveMotor2.set(speed);
   }
 
   /**

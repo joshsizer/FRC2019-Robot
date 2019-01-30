@@ -8,12 +8,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.PopPopper;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.utilities.CMath;
 import frc.robot.utilities.XboxController;
 
 /**
@@ -27,7 +27,9 @@ public class OI {
   public PIDController mTurnToAngleController;
   public AutoAim mAutoAim;
 
-  public static boolean mLastDriverTrigger = false;
+  public static boolean mLastDriverLeftTrigger = false;
+  public static boolean mLastDriverRightTrigger = false;
+
 
   public OI() {
     mDriverController = new XboxController(RobotMap.kDriverControllerPort);
@@ -37,11 +39,29 @@ public class OI {
   }
 
   public void run() {
-    Robot.Drive.setSpeedTurn(mDriverController.getY(Hand.kLeft),
-        mDriverController.getX(Hand.kRight));
 
-    // mDriverController.ButtonA.whileHeld(new PopPopper());
+    // get the driver's left and right sticks, apply exponential filter
+    // and apply deadband
+    // double leftStickY = -1.0 * mDriverController.getLeftYAxis();
+    // double rightStickX = mDriverController.getRightXAxis();
 
+    // double leftStickY = -0.7 * mDriverController.getLeftYAxis();
+    // double rightStickY = -0.7 * mDriverController.getRightYAxis();
+
+    // leftStickY = CMath.exponentialFilter(leftStickY);
+    // rightStickY = CMath.exponentialFilter(rightStickY);
+    // leftStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickY);
+    // rightStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, rightStickY);
+
+    double leftStickY = -0.7 * mDriverController.getLeftYAxis();
+    double leftStickX = 0.7 * mDriverController.getLeftXAxis();
+
+    leftStickY = CMath.exponentialFilter(leftStickY);
+    leftStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickY);
+    leftStickX = CMath.exponentialFilter(leftStickX);
+    leftStickX = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickX);
+
+    Robot.Drive.setSpeedTurn(leftStickY, leftStickX);
 
     if (mDriverController.getAButton()) {
       Robot.Popper.pop();
@@ -49,18 +69,25 @@ public class OI {
       Robot.Popper.retract();
     }
 
-    if (mDriverController.getLeftTrigger()) {
+    if (mDriverController.getBButton()) {
+      Robot.Arm.retract();
+    } else {
+      Robot.Arm.extend();
+    }
+
+    if (mDriverController.getLeftTrigger() && !mLastDriverLeftTrigger) {
       new AutoAim().start();
     }
 
-    if (mDriverController.getRightTrigger() && !mLastDriverTrigger) {
+    if (mDriverController.getRightTrigger() && !mLastDriverRightTrigger) {
       new TurnToAngle(SmartDashboard.getNumber("turn_to_angle_setpoint", Robot.Drive.getYaw()))
           .start();
-    } else if (mLastDriverTrigger) {
+    } else if (mLastDriverRightTrigger) {
       Robot.Drive.getCurrentCommand().cancel();
     }
 
-    mLastDriverTrigger = mDriverController.getRightTrigger();
+    mLastDriverLeftTrigger = mDriverController.getLeftTrigger();
+    mLastDriverRightTrigger = mDriverController.getRightTrigger();
   }
 
 

@@ -6,19 +6,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
-public class Popper extends Subsystem {
+public class Arm extends Subsystem {
 
   private DoubleSolenoid mSolenoid1;
-  private DoubleSolenoid mSolenoid2;
 
-  public Popper() {
+  public Arm() {
     mSolenoid1 =
-        new DoubleSolenoid(RobotMap.kPopperDoubSolen1Forw, RobotMap.kPopperDoubSolen1Reverse);
-    mSolenoid2 =
-        new DoubleSolenoid(RobotMap.kPopperDoubSolen2Forw, RobotMap.kPopperDoubSolen2Reverse);
+        new DoubleSolenoid(RobotMap.kArmDoubleSolen1Forw, RobotMap.kArmDoubleSolen1Reverse);
   }
 
-  public void pop() {
+  public void extend() {
     set(true);
   }
 
@@ -29,10 +26,8 @@ public class Popper extends Subsystem {
   private void set(boolean forward) {
     if (forward) {
       mSolenoid1.set(Value.kForward);
-      mSolenoid2.set(Value.kForward);
     } else {
       mSolenoid1.set(Value.kReverse);
-      mSolenoid2.set(Value.kReverse);
     }
   }
 
