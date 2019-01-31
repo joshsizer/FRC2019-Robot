@@ -22,6 +22,9 @@ public class Drive extends Subsystem {
 
   DifferentialDrive mDiffDrive;
 
+  double left;
+  double right;
+
   public Drive() {
     super("Drive");
     if (Robot.isReal()) {
@@ -46,6 +49,7 @@ public class Drive extends Subsystem {
     mRightMotors.setSubsystem("Drive");
     mDiffDrive = new DifferentialDrive(mLeftMotors, mRightMotors);
     mDiffDrive.setSubsystem("Drive");
+    mDiffDrive.setDeadband(0.0);
     addChild(mDiffDrive);
   }
 
@@ -97,6 +101,8 @@ public class Drive extends Subsystem {
   public void periodic() {
     navx.setAngleAdjustment(getYaw() + 0.01);
     System.out.println("getPWMRight():" + getPWMRight());
-    curvatureDrive(0.5, 0.5, false);
+    curvatureDrive(left, right, false);
+    left += 0.001;
+    right += 0.001;
   }
 }
