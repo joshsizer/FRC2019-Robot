@@ -6,22 +6,16 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PWMSpeedController;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.sim.AHRSSim;
 import frc.robot.sim.SparkSim;
 import frc.robot.utilities.CMath;
-import edu.wpi.first.hal.sim.PWMSim;
-import edu.wpi.first.hal.sim.AnalogGyroSim;;
 
 public class Drive extends Subsystem {
 
   AHRS navx;
-  AnalogGyroSim navxSim;
-
-  PWMSim pwmsim;
 
   SpeedControllerGroup mLeftMotors;
   SpeedControllerGroup mRightMotors;
@@ -52,7 +46,6 @@ public class Drive extends Subsystem {
     mRightMotors.setSubsystem("Drive");
     mDiffDrive = new DifferentialDrive(mLeftMotors, mRightMotors);
     mDiffDrive.setSubsystem("Drive");
-    mDiffDrive.setDeadband(0);
     addChild(mDiffDrive);
   }
 
