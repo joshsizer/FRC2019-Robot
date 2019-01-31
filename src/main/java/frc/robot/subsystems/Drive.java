@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.RobotMap;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.utilities.CMath;
 
 public class Drive extends Subsystem {
@@ -28,45 +29,47 @@ public class Drive extends Subsystem {
     mRightDriveMotor1 = new Spark(RobotMap.kRightMotor1);
     mRightDriveMotor2 = new Spark(RobotMap.kRightMotor2);
 
-    mLeftDriveMotor1.setInverted(true);
-    mLeftDriveMotor2.setInverted(true);
+    mRightDriveMotor1.setInverted(true);
+    mRightDriveMotor2.setInverted(true);
 
-    // SpeedControllerGroup leftContGroup =
-    // new SpeedControllerGroup(mLeftDriveMotor1, mLeftDriveMotor2);
-    // SpeedControllerGroup rightContGroup =
-    // new SpeedControllerGroup(mRightDriveMotor1, mRightDriveMotor2);
+    SpeedControllerGroup leftContGroup =
+      new SpeedControllerGroup(mLeftDriveMotor1, mLeftDriveMotor2);
+    SpeedControllerGroup rightContGroup =
+      new SpeedControllerGroup(mRightDriveMotor1, mRightDriveMotor2);
 
-    // mDiffDrive = new DifferentialDrive(leftContGroup, rightContGroup);
+    mDiffDrive = new DifferentialDrive(leftContGroup, rightContGroup);
   }
 
   @Override
   protected void initDefaultCommand() {
-
+    setDefaultCommand(new ArcadeDrive());
   }
 
-  public void setSpeedTurn(double speed, double turn) {
-    // mDiffDrive.curvatureDrive(speed, turn, false);
-    setLeft(speed - turn);
-    setRight(speed + turn);
+  public void arcadeDrive(double xSpeed, double zRotation, boolean sqareInput) {
+    mDiffDrive.arcadeDrive(xSpeed, zRotation, sqareInput);
   }
 
-  public void setSpeedLeftRight(double left, double right) {
+  public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
+    mDiffDrive.curvatureDrive(xSpeed, zRotation, isQuickTurn);
+  }
+
+  public void stop() {
+    setLeftRight(0, 0);
+  }
+
+  public void setLeftRight(double left, double right) {
     setLeft(left);
     setRight(right);
   }
 
-  private void setLeft(double speed) {
+  public void setLeft(double speed) {
     mLeftDriveMotor1.set(speed);
     mLeftDriveMotor2.set(speed);
   }
 
-  private void setRight(double speed) {
+  public void setRight(double speed) {
     mRightDriveMotor1.set(speed);
     mRightDriveMotor2.set(speed);
-  }
-
-  public void set(double speed) {
-    mLeftDriveMotor2.set(speed);
   }
 
   /**

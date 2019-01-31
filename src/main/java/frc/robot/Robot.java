@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
   public static Drive Drive;
   public static Popper Popper;
   public static Arm Arm;
-  public static OI mOI;
+  public static OI OI;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
     Drive = new Drive();
     Popper = new Popper();
     Arm = new Arm();
-    mOI = new OI();
+    OI = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    mOI.run();
+    OI.run();
   }
 
   /**
