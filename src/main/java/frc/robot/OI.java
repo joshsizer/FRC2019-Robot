@@ -10,8 +10,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutoAim;
+import frc.robot.commands.ExtendArm;
 import frc.robot.commands.PopPopper;
+import frc.robot.commands.RetractArm;
+import frc.robot.commands.RetractPopper;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.utilities.CMath;
 import frc.robot.utilities.XboxController;
@@ -27,12 +31,21 @@ public class OI {
   public PIDController mTurnToAngleController;
   public AutoAim mAutoAim;
 
-  public static boolean mLastDriverLeftTrigger = false;
-  public static boolean mLastDriverRightTrigger = false;
-
-
   public OI() {
     mDC = new XboxController(RobotMap.kDriverControllerPort);
+
+    if (Robot.isReal()) {
+
+      mDC.getAButtonObject().whenPressed(new PopPopper());
+      mDC.getAButtonObject().whenReleased(new RetractPopper());
+
+      mDC.getBButtonObject().whenPressed(new ExtendArm());
+      mDC.getBButtonObject().whenReleased(new RetractArm());
+
+
+      mDC.getRightBumperObject().whenPressed(new AutoAim());
+      mDC.getRightBumperObject().whenReleased(Robot.Drive.getDefaultCommand());
+    }
   }
 
   public void run() {

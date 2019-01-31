@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.sim.DriverStationSim;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -39,13 +40,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    OI = new OI();
     Drive = new Drive();
     Popper = new Popper();
     Arm = new Arm();
-    OI = new OI();
+
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+
+    DriverStationSim sim = new DriverStationSim();
+    sim.setEnabled(true);
   }
 
   /**
@@ -73,6 +78,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
+
+    if (!Drive.isGyroCalibrating()) {
+      Drive.resetGyro();
+    }
   }
 
   /**
@@ -127,7 +136,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    OI.run();
   }
 
   /**

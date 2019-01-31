@@ -5,44 +5,60 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PWMSpeedController;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.sim.AHRSSim;
+import frc.robot.sim.SparkSim;
 import frc.robot.utilities.CMath;
+import edu.wpi.first.hal.sim.PWMSim;
+import edu.wpi.first.hal.sim.AnalogGyroSim;;
 
 public class Drive extends Subsystem {
 
   AHRS navx;
+  AnalogGyroSim navxSim;
 
-  Spark mLeftDriveMotor1;
-  Spark mLeftDriveMotor2;
-  Spark mRightDriveMotor1;
-  Spark mRightDriveMotor2;
+  PWMSim pwmsim;
+
+  SpeedControllerGroup mLeftMotors;
+  SpeedControllerGroup mRightMotors;
 
   DifferentialDrive mDiffDrive;
 
   public Drive() {
-    navx = new AHRS(SerialPort.Port.kMXP);
+    super("Drive");
+    if (Robot.isReal()) {
+      navx = new AHRS(I2C.Port.kMXP);
+    } else {
+      navx = new AHRSSim(I2C.Port.kMXP);
+    }
 
-    mLeftDriveMotor1 = new Spark(RobotMap.kLeftMotor1);
-    mLeftDriveMotor2 = new Spark(RobotMap.kLeftMotor2);
-    mRightDriveMotor1 = new Spark(RobotMap.kRightMotor1);
-    mRightDriveMotor2 = new Spark(RobotMap.kRightMotor2);
+    if (Robot.isReal()) {
+      mLeftMotors = new SpeedControllerGroup(new Spark(RobotMap.kLeftMotor1),
+          new Spark(RobotMap.kLeftMotor2));
+      mRightMotors = new SpeedControllerGroup(new Spark(RobotMap.kRightMotor1),
+          new Spark(RobotMap.kRightMotor2));
+    } else {
+      mLeftMotors = new SpeedControllerGroup(new SparkSim(RobotMap.kLeftMotor1),
+          new SparkSim(RobotMap.kLeftMotor2));
+      mRightMotors = new SpeedControllerGroup(new SparkSim(RobotMap.kRightMotor1),
+          new SparkSim(RobotMap.kRightMotor2));
+    }
 
-    mRightDriveMotor1.setInverted(true);
-    mRightDriveMotor2.setInverted(true);
-
-    SpeedControllerGroup leftContGroup =
-      new SpeedControllerGroup(mLeftDriveMotor1, mLeftDriveMotor2);
-    SpeedControllerGroup rightContGroup =
-      new SpeedControllerGroup(mRightDriveMotor1, mRightDriveMotor2);
-
-    mDiffDrive = new DifferentialDrive(leftContGroup, rightContGroup);
+    mLeftMotors.setSubsystem("Drive");
+    mRightMotors.setSubsystem("Drive");
+    mDiffDrive = new DifferentialDrive(mLeftMotors, mRightMotors);
+    mDiffDrive.setSubsystem("Drive");
+    mDiffDrive.setDeadband(0);
+    addChild(mDiffDrive);
   }
 
   @Override
   protected void initDefaultCommand() {
-    setDefaultCommand(new ArcadeDrive());
+    // setDefaultCommand(new ArcadeDrive());
   }
 
   public void arcadeDrive(double xSpeed, double zRotation, boolean sqareInput) {
@@ -53,23 +69,12 @@ public class Drive extends Subsystem {
     mDiffDrive.curvatureDrive(xSpeed, zRotation, isQuickTurn);
   }
 
+  public void setLeftRight(double leftSpeed, double rightSpeed, boolean squareInputs) {
+    mDiffDrive.tankDrive(leftSpeed, rightSpeed, squareInputs);
+  }
+
   public void stop() {
-    setLeftRight(0, 0);
-  }
-
-  public void setLeftRight(double left, double right) {
-    setLeft(left);
-    setRight(right);
-  }
-
-  public void setLeft(double speed) {
-    mLeftDriveMotor1.set(speed);
-    mLeftDriveMotor2.set(speed);
-  }
-
-  public void setRight(double speed) {
-    mRightDriveMotor1.set(speed);
-    mRightDriveMotor2.set(speed);
+    // mDiffDrive.stopMotor();
   }
 
   /**
@@ -77,5 +82,28 @@ public class Drive extends Subsystem {
    */
   public double getYaw() {
     return CMath.getAngle0to360(navx.getAngle());
+  }
+
+  public void resetGyro() {
+    navx.reset();
+  }
+
+  public boolean isGyroCalibrating() {
+    return navx.isCalibrating();
+  }
+
+  public double getPWMLeft() {
+    return mLeftMotors.get();
+  }
+
+  public double getPWMRight() {
+    return mRightMotors.get();
+  }
+
+  @Override
+  public void periodic() {
+    navx.setAngleAdjustment(getYaw() + 0.01);
+    System.out.println("getPWMRight():" + getPWMRight());
+    curvatureDrive(0.5, 0.5, false);
   }
 }

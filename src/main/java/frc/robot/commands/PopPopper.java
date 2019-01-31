@@ -9,16 +9,17 @@ public class PopPopper extends Command {
 
   public PopPopper() {
     mPopper = Robot.Popper;
+    setInterruptible(true);
   }
 
   @Override
   protected void initialize() {
+    mPopper.pop();
   }
 
   @Override
   protected void execute() {
-    System.out.println("Executing PopPopper command!");
-    mPopper.pop();
+
   }
 
   @Override

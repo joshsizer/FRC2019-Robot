@@ -12,10 +12,17 @@ public class Popper extends Subsystem {
   private DoubleSolenoid mSolenoid2;
 
   public Popper() {
+    super("Popper");
     mSolenoid1 =
         new DoubleSolenoid(RobotMap.kPopperDoubSolen1Forw, RobotMap.kPopperDoubSolen1Reverse);
     mSolenoid2 =
         new DoubleSolenoid(RobotMap.kPopperDoubSolen2Forw, RobotMap.kPopperDoubSolen2Reverse);
+    mSolenoid1.setSubsystem("Popper");
+    mSolenoid1.setName("Popper Piston 1");
+    addChild(mSolenoid1);
+    mSolenoid2.setSubsystem("Popper");
+    mSolenoid2.setName("Popper Piston 2");
+    addChild(mSolenoid2);
   }
 
   public void pop() {

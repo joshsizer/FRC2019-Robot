@@ -8,21 +8,25 @@ import frc.robot.RobotMap;
 import frc.robot.subsystems.Drive;
 
 public class TurnToAngle extends PIDCommand {
+
   Drive mDrive;
   PIDController mController;
 
   public TurnToAngle(double angle) {
     super(RobotMap.turnToAnglePIDName, RobotMap.turnToAnglekP, RobotMap.turnToAnglekI,
         RobotMap.turnToAngleKD);
-    super.setInputRange(0, 360);
+    super.setInputRange(0, 359.999);
     mController = super.getPIDController();
     mController.setAbsoluteTolerance(RobotMap.turnToAngleTolerance);
     mController.setContinuous(true);
-    mController.setOutputRange(RobotMap.turnToAngleMinOutput, RobotMap.turnToAngleMaxOutput);
+    mController.setOutputRange(-RobotMap.turnToAngleMaxOutput, RobotMap.turnToAngleMaxOutput);
     mController.setSetpoint(angle);
-    SmartDashboard.putData("Turn to Angle PID", mController);
+    mController.setF(0);
 
+    SmartDashboard.putData("Turn to Angle PID", mController);
     mDrive = Robot.Drive;
+
+    setInterruptible(true);
     requires(mDrive);
   }
 
@@ -33,14 +37,11 @@ public class TurnToAngle extends PIDCommand {
 
   @Override
   protected void initialize() {
-    super.initialize();
-
     // pid controller starts
   }
 
   @Override
   protected void execute() {
-    super.execute();
   }
 
   @Override
@@ -50,13 +51,12 @@ public class TurnToAngle extends PIDCommand {
 
   @Override
   protected void end() {
-    super.end();
-    mDrive.setSpeedTurn(0.0, 0.0);
+    mDrive.stop();
   }
 
   @Override
   protected void interrupted() {
-    super.interrupted();
+    end();
   }
 
   @Override
@@ -66,7 +66,10 @@ public class TurnToAngle extends PIDCommand {
 
   @Override
   protected void usePIDOutput(double output) {
-    mDrive.setSpeedTurn(0.0, output);
+    if (Math.abs(output) < RobotMap.turnToAngleMinOutput) {
+      output = Math.copySign(RobotMap.turnToAngleMinOutput, output);
+    }
+    mDrive.arcadeDrive(0, output, false);
   }
 
   public PIDController getController() {
