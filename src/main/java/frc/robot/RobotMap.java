@@ -8,9 +8,10 @@
 package frc.robot;
 
 /**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into to a variable name.
- * This provides flexibility changing wiring, makes checking the wiring easier and significantly
- * reduces the number of magic numbers floating around.
+ * The RobotMap is a mapping from the ports sensors and actuators are wired into
+ * to a variable name. This provides flexibility changing wiring, makes checking
+ * the wiring easier and significantly reduces the number of magic numbers
+ * floating around.
  */
 public class RobotMap {
   public static int kDriverControllerPort = 0;
@@ -18,9 +19,9 @@ public class RobotMap {
   public static double kDriverDeadband = 0.1;
 
   public static int kRightMotor1 = 2;
-  public static int kRightMotor2 = 1;
+  public static int kRightMotor2 = 3;
   public static int kLeftMotor1 = 0;
-  public static int kLeftMotor2 = 3;
+  public static int kLeftMotor2 = 1;
 
   public static int kPopperDoubSolen1Forw = 4;
   public static int kPopperDoubSolen1Reverse = 5;
@@ -40,6 +41,5 @@ public class RobotMap {
 
   // public static int leftMotor = 1;
   // public static int rightMotor = 2;
-
 
 }

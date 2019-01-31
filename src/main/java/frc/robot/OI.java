@@ -17,8 +17,8 @@ import frc.robot.utilities.CMath;
 import frc.robot.utilities.XboxController;
 
 /**
- * This class is the glue that binds the controls on the physical operator interface to the commands
- * and command groups that allow control of the robot.
+ * This class is the glue that binds the controls on the physical operator
+ * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
   public static XboxController mDriverController;
@@ -29,7 +29,6 @@ public class OI {
 
   public static boolean mLastDriverLeftTrigger = false;
   public static boolean mLastDriverRightTrigger = false;
-
 
   public OI() {
     mDriverController = new XboxController(RobotMap.kDriverControllerPort);
@@ -80,8 +79,7 @@ public class OI {
     }
 
     if (mDriverController.getRightTrigger() && !mLastDriverRightTrigger) {
-      new TurnToAngle(SmartDashboard.getNumber("turn_to_angle_setpoint", Robot.Drive.getYaw()))
-          .start();
+      new TurnToAngle(SmartDashboard.getNumber("turn_to_angle_setpoint", Robot.Drive.getYaw())).start();
     } else if (mLastDriverRightTrigger) {
       Robot.Drive.getCurrentCommand().cancel();
     }
@@ -89,8 +87,6 @@ public class OI {
     mLastDriverLeftTrigger = mDriverController.getLeftTrigger();
     mLastDriverRightTrigger = mDriverController.getRightTrigger();
   }
-
-
 
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a
