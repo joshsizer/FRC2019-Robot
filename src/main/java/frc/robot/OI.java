@@ -52,8 +52,8 @@ public class OI {
     // leftStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickY);
     // rightStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, rightStickY);
 
-    double leftStickY = -0.7 * mDriverController.getLeftYAxis();
-    double leftStickX = 0.7 * mDriverController.getLeftXAxis();
+    double leftStickY = -1.0 * mDriverController.getLeftYAxis();
+    double leftStickX = 1.0 * mDriverController.getRightXAxis();
 
     leftStickY = CMath.exponentialFilter(leftStickY);
     leftStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickY);
