@@ -34,15 +34,11 @@ public class Drive extends Subsystem {
     }
 
     if (Robot.isReal()) {
-      mLeftMotors = new SpeedControllerGroup(new Spark(RobotMap.kLeftMotor1),
-          new Spark(RobotMap.kLeftMotor2));
-      mRightMotors = new SpeedControllerGroup(new Spark(RobotMap.kRightMotor1),
-          new Spark(RobotMap.kRightMotor2));
+      mLeftMotors = new SpeedControllerGroup(new Spark(RobotMap.kLeftMotor1), new Spark(RobotMap.kLeftMotor2));
+      mRightMotors = new SpeedControllerGroup(new Spark(RobotMap.kRightMotor1), new Spark(RobotMap.kRightMotor2));
     } else {
-      mLeftMotors = new SpeedControllerGroup(new SparkSim(RobotMap.kLeftMotor1),
-          new SparkSim(RobotMap.kLeftMotor2));
-      mRightMotors = new SpeedControllerGroup(new SparkSim(RobotMap.kRightMotor1),
-          new SparkSim(RobotMap.kRightMotor2));
+      mLeftMotors = new SpeedControllerGroup(new SparkSim(RobotMap.kLeftMotor1), new SparkSim(RobotMap.kLeftMotor2));
+      mRightMotors = new SpeedControllerGroup(new SparkSim(RobotMap.kRightMotor1), new SparkSim(RobotMap.kRightMotor2));
     }
 
     mLeftMotors.setSubsystem("Drive");
@@ -100,7 +96,6 @@ public class Drive extends Subsystem {
   @Override
   public void periodic() {
     navx.setAngleAdjustment(getYaw() + 0.01);
-    System.out.println("getPWMRight():" + getPWMRight());
     curvatureDrive(left, right, false);
     left += 0.001;
     right += 0.001;

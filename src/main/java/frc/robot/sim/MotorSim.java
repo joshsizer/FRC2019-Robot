@@ -1,5 +1,7 @@
 package frc.robot.sim;
 
+import frc.robot.utilities.CMath;
+
 public abstract class MotorSim {
 
   private MotorSimConfig mConfig;
@@ -14,6 +16,8 @@ public abstract class MotorSim {
   // 775 Pro constants
   public static double k775ProStallTorque = 0.71; // N * m
   public static double k775ProFreeSpeed = 18730; // RPM
+
+  private double mCurrentVoltage;
 
   public static class MotorSimConfig {
     private double mStallTorque;
@@ -36,11 +40,15 @@ public abstract class MotorSim {
   }
 
   private double calculateFreeSpeed(double v) {
-    return v * mConfig.mFreeSpeed / mConfig.mReferenceVoltage;
+    return CMath.epsilon(v * mConfig.mFreeSpeed / mConfig.mReferenceVoltage);
   }
 
   private double calculateStallTorque(double v) {
-    return v * mConfig.mStallTorque / mConfig.mReferenceVoltage;
+    return CMath.epsilon(v * mConfig.mStallTorque / mConfig.mReferenceVoltage);
+  }
+
+  private double calculateVoltage(double rotationRate) {
+    return CMath.epsilon(mConfig.mReferenceVoltage * rotationRate / mConfig.mFreeSpeed);
   }
 
   /**
@@ -51,15 +59,26 @@ public abstract class MotorSim {
    */
   public double calculateTorque(double v, double rotationRate) {
     double stallTorque = calculateStallTorque(v);
-    double slope = -stallTorque / calculateFreeSpeed(v);
-    return slope * rotationRate + stallTorque;
+    double freeSpeed = calculateFreeSpeed(v);
+
+    // assuming break mode
+    if (v == 0 && Math.abs(rotationRate) > 0) {
+      return calculateTorque(-calculateVoltage(rotationRate), rotationRate);
+    } else {
+      if (v == 0) {
+        return 0;
+      } else {
+        double slope = -stallTorque / freeSpeed;
+        return CMath.epsilon(slope * rotationRate + stallTorque);
+      }
+    }
   }
 
   public static MotorSimConfig CIMConfig() {
     return new MotorSimConfig(kCIMStallTorque, kCIMFreeSpeed, kReferenceVoltage);
   }
 
-  public static MotorSimConfig 775ProConfig() {
+  public static MotorSimConfig SevenSevenFiveProConfig() {
     return new MotorSimConfig(k775ProStallTorque, k775ProFreeSpeed, kReferenceVoltage);
   }
 }

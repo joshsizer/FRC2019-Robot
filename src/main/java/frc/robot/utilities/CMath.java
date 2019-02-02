@@ -13,7 +13,8 @@ public class CMath {
   }
 
   /**
-   * The sign of the input will stay the same, but deadband should be a positive number
+   * The sign of the input will stay the same, but deadband should be a positive
+   * number
    * 
    * @param deadband
    * @param input
@@ -36,5 +37,20 @@ public class CMath {
     }
 
     return sign * input * input;
+  }
+
+  public static double convertRPMtoRPS(double RPM) {
+    return (RPM / 60.0) * 2 * Math.PI;
+  }
+
+  public static double convertRPStoRPM(double rps) {
+    return rps / 2.0 / Math.PI * 60.0;
+  }
+
+  public static double epsilon(double input) {
+    if (Math.abs(input) < 1e-12) {
+      input = 0;
+    }
+    return input;
   }
 }

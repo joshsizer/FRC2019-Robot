@@ -32,7 +32,7 @@ public class OI {
   public AutoAim mAutoAim;
 
   public OI() {
-    mDC = new XboxController(RobotMap.kDriverControllerPort);
+    //mDC = new XboxController(RobotMap.kDriverControllerPort);
 
     if (Robot.isReal()) {
 
