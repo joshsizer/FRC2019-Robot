@@ -53,8 +53,8 @@ public class Robot extends TimedRobot {
     Popper = new Popper();
     Arm = new Arm();
 
-    mWheelL = new Wheel(0.1016, 0.005, 5.56, new CIM(), new CIM());
-    mWheelR = new Wheel(0.1016, 0.005, 5.56, new CIM(), new CIM());
+    mWheelL = new Wheel(0.1016, 0.01, 3, new CIM(), new CIM());
+    mWheelR = new Wheel(0.1016, 0.01, 3, new CIM(), new CIM());
     dbs = new DriveBaseSim(1, 0.02, mWheelL, mWheelR);
 
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());

@@ -11,6 +11,7 @@ public class Wheel {
   private double mInertia;
   private double mAngularPosition; // in rad
   private double mAngularVelocity; // in rad/s
+  private double mAngularAcceleration;
   private double mReduction;
 
   private ArrayList<MotorSim> mMotors;
@@ -33,11 +34,13 @@ public class Wheel {
       // angular velocity here must be in RPM
       torqueTotal += motor.calculateTorque(v, CMath.convertRPStoRPM(mAngularVelocity * mReduction));
     }
-    double torqueLoss = -1 * Math.signum(mAngularVelocity) * 2.5 * v / 12;
+    // double torqueLoss = -1 * Math.signum(mAngularVelocity) * 2.5 * v / 12;
     torqueTotal *= mReduction;
+    torqueTotal -= 0.1 * (mAngularAcceleration * mInertia);
     torqueTotal = CMath.epsilon(torqueTotal * kTorqueLoss);
     // rads /s /s
     double angularAccel = torqueTotal / mInertia;
+    mAngularAcceleration = angularAccel;
 
     // rads /s
     mAngularVelocity = (mAngularVelocity + (CMath.epsilon(angularAccel) * dt) / mReduction);
