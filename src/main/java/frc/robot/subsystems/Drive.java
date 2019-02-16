@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.RobotMap;
 import frc.robot.utilities.CMath;
 
@@ -21,7 +22,11 @@ public class Drive extends Subsystem {
   DifferentialDrive mDiffDrive;
 
   public Drive() {
-    navx = new AHRS(SerialPort.Port.kMXP);
+    try {
+      navx = new AHRS(SPI.Port.kMXP);
+    } catch (RuntimeException e) {
+      DriverStation.reportError("Error instantiating navx MXP: " + e.getMessage(), true);
+    }
 
     mLeftDriveMotor1 = new Spark(RobotMap.kLeftMotor1);
     mLeftDriveMotor2 = new Spark(RobotMap.kLeftMotor2);

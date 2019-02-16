@@ -4,9 +4,10 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project. */
 /*----------------------------------------------------------------------------*/
-
+ 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -14,9 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Popper;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Jumper;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,7 +29,10 @@ public class Robot extends TimedRobot {
   public static Drive Drive;
   public static Popper Popper;
   public static Arm Arm;
+  public static Jumper Jumper;
+  public static Compressor Compressor;
   public static OI mOI;
+
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -42,6 +46,8 @@ public class Robot extends TimedRobot {
     Drive = new Drive();
     Popper = new Popper();
     Arm = new Arm();
+    Jumper = new Jumper();
+    // Compressor = new Compressor(1);
     mOI = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
@@ -67,12 +73,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-
   }
 
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
+    // System.out.println(Compressor.getPressureSwitchValue());
   }
 
   /**
@@ -112,6 +118,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -128,6 +135,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
     mOI.run();
+    // System.out.println(Compressor.getPressureSwitchValue());
   }
 
   /**

@@ -22,6 +22,7 @@ import frc.robot.utilities.XboxController;
  */
 public class OI {
   public static XboxController mDriverController;
+  public static XboxController mOperatorController;
 
   public TurnToAngle mTurnToAngle;
   public PIDController mTurnToAngleController;
@@ -32,6 +33,7 @@ public class OI {
 
   public OI() {
     mDriverController = new XboxController(RobotMap.kDriverControllerPort);
+    mOperatorController = new XboxController(RobotMap.kOperatorControllerPort);
 
     // set our commands for each button
     // mDriverController.ButtonA.whileHeld(new PopPopper());
@@ -55,10 +57,10 @@ public class OI {
     double leftStickY = -1.0 * mDriverController.getLeftYAxis();
     double leftStickX = 1.0 * mDriverController.getRightXAxis();
 
-    leftStickY = CMath.exponentialFilter(leftStickY);
-    leftStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickY);
-    leftStickX = CMath.exponentialFilter(leftStickX);
-    leftStickX = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickX);
+    // leftStickY = CMath.exponentialFilter(leftStickY);
+    // leftStickY = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickY);
+    // leftStickX = CMath.exponentialFilter(leftStickX);
+    // leftStickX = CMath.applyDeadband(RobotMap.kDriverDeadband, leftStickX);
 
     Robot.Drive.setSpeedTurn(leftStickY, leftStickX);
 
@@ -68,10 +70,22 @@ public class OI {
       Robot.Popper.retract();
     }
 
-    if (mDriverController.getBButton()) {
+    if (mOperatorController.getAButton()) {
       Robot.Arm.retract();
     } else {
       Robot.Arm.extend();
+    }
+
+    if (mDriverController.getXButton()) {
+      Robot.Jumper.popFront();
+    } else {
+      Robot.Jumper.retractFront();
+    }
+
+    if (mDriverController.getYButton()) {
+      Robot.Jumper.popBack();
+    } else {
+      Robot.Jumper.retractBack();
     }
 
     if (mDriverController.getLeftTrigger() && !mLastDriverLeftTrigger) {

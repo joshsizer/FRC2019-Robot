@@ -11,8 +11,8 @@ public class Arm extends Subsystem {
   private DoubleSolenoid mSolenoid1;
 
   public Arm() {
-    mSolenoid1 =
-        new DoubleSolenoid(RobotMap.kArmDoubleSolen1Forw, RobotMap.kArmDoubleSolen1Reverse);
+    mSolenoid1 = new DoubleSolenoid(RobotMap.kArmDoubleSolen1Module, RobotMap.kArmDoubleSolen1Forw,
+        RobotMap.kArmDoubleSolen1Reverse);
   }
 
   public void extend() {
